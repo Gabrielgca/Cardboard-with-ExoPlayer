@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="icon">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="UiButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/rippleable</item>
+        <item name="android:padding">9dip</item>
+    </style>
+
+    <declare-styleable name="OurPlayerView">
+        <attr name="use_artwork"/>
+        <attr name="shutter_background_color"/>
+        <attr name="default_artwork"/>
+        <attr name="use_controller"/>
+        <attr name="hide_on_touch"/>
+        <attr name="hide_during_ads"/>
+        <attr name="auto_show"/>
+        <attr name="show_buffering"/>
+        <attr name="keep_content_on_player_reset"/>
+        <attr name="player_layout_id"/>
+        <attr name="surface_type"/>
+        <!-- AspectRatioFrameLayout attributes -->
+        <attr name="resize_mode"/>
+        <!-- PlayerControlView attributes -->
+        <attr name="show_timeout"/>
+        <attr name="rewind_increment"/>
+        <attr name="fastforward_increment"/>
+        <attr name="repeat_toggle_modes"/>
+        <attr name="show_shuffle_button"/>
+        <attr name="time_bar_min_update_interval"/>
+        <attr name="controller_layout_id"/>
+        <!-- DefaultTimeBar attributes -->
+        <attr name="bar_height"/>
+        <attr name="touch_target_height"/>
+        <attr name="ad_marker_width"/>
+        <attr name="scrubber_enabled_size"/>
+        <attr name="scrubber_disabled_size"/>
+        <attr name="scrubber_dragged_size"/>
+        <attr name="scrubber_drawable"/>
+        <attr name="played_color"/>
+        <attr name="scrubber_color"/>
+        <attr name="buffered_color"/>
+        <attr name="unplayed_color"/>
+        <attr name="ad_marker_color"/>
+        <attr name="played_ad_marker_color"/>
+    </declare-styleable>
+</resources>
