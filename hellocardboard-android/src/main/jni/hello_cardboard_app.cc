@@ -396,7 +396,7 @@ void HelloCardboardApp::DrawTarget() {
 }
 
 void HelloCardboardApp::DrawRoom() {
-  glUseProgram(obj_program_);
+    glUseProgram(obj_program_);
 
   std::array<float, 16> room_array = modelview_projection_room_.ToGlArray();
   glUniformMatrix4fv(obj_modelview_projection_param_, 1, GL_FALSE,

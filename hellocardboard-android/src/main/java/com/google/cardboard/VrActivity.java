@@ -43,11 +43,13 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.OurSimpleExoPlayer;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.spherical.SphericalGLSurfaceView;
 import com.google.cardboard.video.spherical.OurSphericalGLSurfaceView;
+
 
 /**
  * A Google Cardboard VR NDK sample application.
@@ -68,7 +70,7 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
   public static final String SPHERICAL_STEREO_MODE_LEFT_RIGHT = "left_right";
 
   private static final String TAG = VrActivity.class.getSimpleName();
-  private static final String url = "https://storage.googleapis.com/exoplayer-test-media-1/360/sphericalv2.mp4";
+  private static final String url = "https://storage.googleapis.com/exoplayer-test-media-1/360/congo.mp4";
 
 
   //Uri uri = Uri.parse("https://storage.googleapis.com/exoplayer-test-media-1/360/sphericalv2.mp4");
@@ -87,7 +89,7 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
   private OurSphericalGLSurfaceView sphericalGLSurfaceView;
 
 
-  private SimpleExoPlayer player;
+  private OurSimpleExoPlayer player;
 
   private OurPlayerView playerView;
 
@@ -106,7 +108,7 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
     playerView = findViewById(R.id.player_view);
 
     sphericalGLSurfaceView = (OurSphericalGLSurfaceView) playerView.getVideoSurfaceView();
-
+    sphericalGLSurfaceView.setNativeApp(nativeApp);
     //glView = findViewById(R.id.surface_view);
 
 
@@ -136,8 +138,8 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
       }
       sphericalGLSurfaceView.setDefaultStereoMode(stereoMode);
     }
-//    Renderer renderer = new Renderer();
-//    sphericalGLSurfaceView.setRenderer(renderer);
+    // renderer = new Renderer();
+    //sphericalGLSurfaceView.setRenderer(renderer);
     sphericalGLSurfaceView.setRenderMode(OurSphericalGLSurfaceView.RENDERMODE_CONTINUOUSLY);
 //    sphericalGLSurfaceView.setOnTouchListener(
 //        (v, event) -> {
@@ -253,22 +255,6 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
     }
   }
 
-  private class Renderer implements GLSurfaceView.Renderer {
-    @Override
-    public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-      nativeOnSurfaceCreated(nativeApp);
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl10, int width, int height) {
-      nativeSetScreenParams(nativeApp, width, height);
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl10) {
-      nativeOnDrawFrame(nativeApp);
-    }
-  }
 
   /** Callback for when close button is pressed. */
   public void closeSample(View view) {
@@ -353,29 +339,14 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
 
   private void initializePlayer() {
     if (player == null) {
-
-      player = new SimpleExoPlayer.Builder(this).build();
-
-
+      player = new OurSimpleExoPlayer.Builder(this).build();
       MediaItem mediaItem = new MediaItem.Builder()
               .setUri(url)
-              //.setUri("http://gpds.ene.unb.br/videos/normal/clans_4320x2160_30_3100000.mp4")
               .build();
-
       player.setMediaItem(mediaItem);
-      //Uri uri = Uri.parse("https://storage.googleapis.com/exoplayer-test-media-1/360/sphericalv2.mp4");
-      //https://storage.googleapis.com/exoplayer-test-media-1/360/iceland0.ts
-      //https://storage.googleapis.com/exoplayer-test-media-1/360/congo.mp4
-      //https://storage.googleapis.com/exoplayer-test-media-1/360/sphericalv2.mp4
-      //MediaSource mediaSource = buildMediaSource(uri);
       player.setVideoSurfaceView(sphericalGLSurfaceView);
-
-      //player.setPlayWhenReady(playWhenReady);
       player.prepare();
-
     }
-
-
     playerView.setPlayer(player);
   }
 
@@ -386,21 +357,56 @@ public class VrActivity extends AppCompatActivity implements PopupMenu.OnMenuIte
     }
   }
 
-  private native long nativeOnCreate(AssetManager assetManager);
+  private class Renderer implements GLSurfaceView.Renderer {
+    @Override
+    public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
+      nativeOnSurfaceCreated(nativeApp);
+    }
 
-  private native void nativeOnDestroy(long nativeApp);
+    @Override
+    public void onSurfaceChanged(GL10 gl10, int width, int height) {
+      nativeSetScreenParams(nativeApp, width, height);
+    }
 
-  private native void nativeOnSurfaceCreated(long nativeApp);
+    @Override
+    public void onDrawFrame(GL10 gl10) {
+      nativeOnDrawFrame(nativeApp);
+    }
+  }
 
-  private native void nativeOnDrawFrame(long nativeApp);
 
-  private native void nativeOnTriggerEvent(long nativeApp);
+  public native long nativeOnCreate(AssetManager assetManager);
 
-  private native void nativeOnPause(long nativeApp);
+  public native void nativeOnDestroy(long nativeApp);
 
-  private native void nativeOnResume(long nativeApp);
+  public static native void nativeOnSurfaceCreated(long nativeApp);
 
-  private native void nativeSetScreenParams(long nativeApp, int width, int height);
+  public static native void nativeOnDrawFrame(long nativeApp);
 
-  private native void nativeSwitchViewer(long nativeApp);
+  public  native void nativeOnTriggerEvent(long nativeApp);
+
+  public native void nativeOnPause(long nativeApp);
+
+  public native void nativeOnResume(long nativeApp);
+
+  public static native void nativeSetScreenParams(long nativeApp, int width, int height);
+
+  public native void nativeSwitchViewer(long nativeApp);
+//private native long nativeOnCreate(AssetManager assetManager);
+//
+//  private native void nativeOnDestroy(long nativeApp);
+//
+//  private native void nativeOnSurfaceCreated(long nativeApp);
+//
+//  private native void nativeOnDrawFrame(long nativeApp);
+//
+//  private native void nativeOnTriggerEvent(long nativeApp);
+//
+//  private native void nativeOnPause(long nativeApp);
+//
+//  private native void nativeOnResume(long nativeApp);
+//
+//  private native void nativeSetScreenParams(long nativeApp, int width, int height);
+//
+//  private native void nativeSwitchViewer(long nativeApp);
 }

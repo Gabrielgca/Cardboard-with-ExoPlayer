@@ -52,6 +52,10 @@ dependencies {
 
     compileOnly 'org.checkerframework:checker-qual:3.17.0'
     compileOnly 'org.checkerframework:checker:3.17.0'
+
+
+    implementation 'com.google.vr:sdk-audio:1.190.0'
+    implementation 'com.google.vr:sdk-base:1.190.0'
     implementation project(":sdk")
 }
 

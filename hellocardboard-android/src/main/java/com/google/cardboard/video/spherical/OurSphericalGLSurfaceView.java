@@ -37,6 +37,7 @@ import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoFrameMetadataListener;
 import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
+import com.google.cardboard.VrActivity;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -60,7 +61,6 @@ import androidx.annotation.VisibleForTesting;
  * match what they expect.
  */
 public final class OurSphericalGLSurfaceView extends GLSurfaceView {
-
     /** Listener for the {@link Surface} to which video frames should be rendered. */
     public interface VideoSurfaceListener {
 
@@ -75,6 +75,10 @@ public final class OurSphericalGLSurfaceView extends GLSurfaceView {
     private static final int FIELD_OF_VIEW_DEGREES = 90;
     private static final float Z_NEAR = 0.1f;
     private static final float Z_FAR = 100;
+
+    // Opaque native pointer to the native CardboardApp instance.
+    // This object is owned by the VrActivity instance and passed to the native methods.
+    private long nativeApp;
 
     // TODO Calculate this depending on surface size and field of view.
     private static final float PX_PER_DEGREES = 25;
@@ -298,7 +302,9 @@ public final class OurSphericalGLSurfaceView extends GLSurfaceView {
 
         @Override
         public synchronized void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
             onSurfaceTextureAvailable(scene.init());
+            VrActivity.nativeOnSurfaceCreated(nativeApp);
         }
 
         @Override
@@ -307,6 +313,7 @@ public final class OurSphericalGLSurfaceView extends GLSurfaceView {
             float aspect = (float) width / height;
             float fovY = calculateFieldOfViewInYDirection(aspect);
             Matrix.perspectiveM(projectionMatrix, 0, fovY, aspect, Z_NEAR, Z_FAR);
+            VrActivity.nativeSetScreenParams(nativeApp, width,height);
         }
 
         @Override
@@ -320,7 +327,9 @@ public final class OurSphericalGLSurfaceView extends GLSurfaceView {
             }
 
             Matrix.multiplyMM(viewProjectionMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+            VrActivity.nativeOnDrawFrame(nativeApp);
             scene.drawFrame(viewProjectionMatrix, /* rightEye= */ false);
+
         }
 
         /** Adjusts the GL camera's rotation based on device rotation. Runs on the sensor thread. */
@@ -375,6 +384,13 @@ public final class OurSphericalGLSurfaceView extends GLSurfaceView {
                 return FIELD_OF_VIEW_DEGREES;
             }
         }
+    }
+
+    public long getNativeApp(){
+        return nativeApp;
+    }
+    public void setNativeApp(long nativeApp) {
+        this.nativeApp=nativeApp;
     }
 }
 

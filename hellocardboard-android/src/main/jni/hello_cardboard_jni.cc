@@ -57,12 +57,12 @@ JNI_METHOD(void, nativeOnDestroy)
 }
 
 JNI_METHOD(void, nativeOnSurfaceCreated)
-(JNIEnv* env, jobject /*obj*/, jlong native_app) {
+(JNIEnv* env, jclass /*obj*/, jlong native_app) {
   native(native_app)->OnSurfaceCreated(env);
 }
 
 JNI_METHOD(void, nativeOnDrawFrame)
-(JNIEnv* /*env*/, jobject /*obj*/, jlong native_app) {
+(JNIEnv* /*env*/, jclass /*obj*/, jlong native_app) {
   native(native_app)->OnDrawFrame();
 }
 
@@ -82,7 +82,7 @@ JNI_METHOD(void, nativeOnResume)
 }
 
 JNI_METHOD(void, nativeSetScreenParams)
-(JNIEnv* /*env*/, jobject /*obj*/, jlong native_app, jint width, jint height) {
+(JNIEnv* /*env*/, jclass /*obj*/, jlong native_app, jint width, jint height) {
   native(native_app)->SetScreenParams(width, height);
 }
 
